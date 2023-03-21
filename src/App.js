@@ -1,23 +1,57 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
 
+function TodoForm( {addTodo} ){
+  const [value, setValue] = useState('')
+
+  const handlSubmit = e => {
+    e.preventDefault()
+    if (!value) return
+    addTodo(value)
+    setValue('')
+  }
+
+  return (
+    <form onSubmit={handlSubmit}>
+      <textarea
+        type='text'
+        className='input'
+        value={value}
+        onChange={e => setValue(e.target.value)}
+      />
+      <button>Add Todo</button>
+    </form>
+  )
+}
+
+function Todo( {todo} ){
+  return(
+    <div className='todo'>
+      {todo.text}
+    </div>
+  )
+}
+
 function App() {
+
+  const [todos, setTodos] = useState([
+    { text: ''},
+  ],)
+
+  const addTodo = text => {
+    const newTodo = [...todos, {text}]
+    setTodos(newTodo)
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Todo List</h1>
+      <TodoForm addTodo={addTodo}/>
+        {todos.map((todo, index) => (
+          <Todo
+            todo={todo}
+          />
+        ))}
     </div>
   );
 }
